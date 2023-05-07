@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.formCont {
+  @apply shadow-lg w-[300px] p-[1.5rem] flex flex-col gap-4;
+}
+.cardCont {
+  @apply w-full h-screen flex justify-center items-center;
+}
+.title {
+  @apply font-bold text-lg text-center;
+}
+
+.react-tel-input .form-control {
+  @apply !w-full py-5 !text-base;
+}

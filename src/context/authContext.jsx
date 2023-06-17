@@ -5,11 +5,13 @@ import {
   onAuthStateChanged,
   signOut,
   GoogleAuthProvider,
+  GithubAuthProvider,
+  FacebookAuthProvider,
   signInWithPopup,
   sendPasswordResetEmail,
   PhoneAuthProvider,
   RecaptchaVerifier,
-  signInWithPhoneNumber
+  updatePhoneNumber
 } from 'firebase/auth';
 import { auth } from '../firebase';
 
@@ -33,59 +35,124 @@ function AuthProvider({ children }) {
 
   const logout = () => signOut(auth);
 
+  /**login socials media */
   const loginWithGoogle = () => {
     const googleProvider = new GoogleAuthProvider();
     return signInWithPopup(auth, googleProvider);
   };
 
+  const loginWithGithub = () => {
+    const githubProvider = new GithubAuthProvider();
+    return signInWithPopup(auth, githubProvider);
+  };
+
+  const loginWithFacebook = () => {
+    const facebookProvider = new FacebookAuthProvider();
+    return signInWithPopup(auth, facebookProvider);
+  };
+
   const resetPassword = email => sendPasswordResetEmail(auth, email);
+
+  /**verifier phone number */
+  // const sendOtpPhone = async phoneInput => {
+  //   //auth
+  //   const user = auth.currentUser;
+
+  //   const phoneProvider = new PhoneAuthProvider(auth);
+
+  //   if (!window.recaptchaVerifier) {
+  //     window.recaptchaVerifier = new RecaptchaVerifier(
+  //       'recaptcha-container',
+  //       {
+  //         size: 'invisible',
+  //         callback: response => {
+  //           console.log(response);
+  //         },
+  //         'expired-callback': () => {
+  //           console.log(
+  //             'La respuesta de reCAPTCHA ha caducado. Por favor, resuelve el reCAPTCHA nuevamente.'
+  //           );
+  //         }
+  //       },
+  //       auth
+  //     );
+  //   }
+
+  //   const verificationID = await phoneProvider.verifyPhoneNumber(
+  //     phoneInput,
+  //     window.recaptchaVerifier
+  //   );
+  //   console.log(verificationID);
+
+  //   return verificationID;
+  // };
+
+  // const verifyOTP = async (verificationID, verificationCode) => {
+  //   const credential = PhoneAuthProvider.credential(
+  //     verificationID,
+  //     verificationCode
+  //   );
+
+  //   try {
+  //     await updatePhoneNumber(auth.currentUser, credential);
+  //     console.log('Updated phone number sucessfully');
+  //   } catch (err) {
+  //     console.log('Failed to update phone number');
+  //     console.log(err);
+  //   }
+  // };
 
   //________________________--PRUEBA
   const updateUserPhone = async phoneI => {
-    //auth
-    const user = auth.currentUser;
+    try {
+      const user = auth.currentUser;
 
-    const phoneProvider = new PhoneAuthProvider();
-    console.log(phoneProvider);
+      const phoneProvider = new PhoneAuthProvider(auth);
 
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        'recaptcha-container',
-        {
-          size: 'invisible',
-          callback: response => {
-            console.log(response);
+      if (!window.recaptchaVerifier) {
+        window.recaptchaVerifier = new RecaptchaVerifier(
+          'recaptcha-container',
+          {
+            size: 'invisible',
+            callback: response => {
+              console.log(response);
+            },
+            'expired-callback': () => {
+              console.log(
+                'La respuesta de reCAPTCHA ha caducado. Por favor, resuelve el reCAPTCHA nuevamente.'
+              );
+            }
           },
-          'expired-callback': () => {
-            // Response expired. Ask user to solve reCAPTCHA again.
-            // ...
-          }
-        },
-        auth
+          auth
+        );
+      }
+      // const appVerifier = new RecaptchaVerifier('recaptcha-container');
+      // console.log(window.recaptchaVerifier);
+      const verificationID = await phoneProvider.verifyPhoneNumber(
+        phoneI,
+        window.recaptchaVerifier
       );
+      const verificationCode = prompt('ingrese el codigo');
+      // console.log(verificationCode);
+      const credential = PhoneAuthProvider.credential(
+        verificationID,
+        verificationCode
+      );
+      console.log(credential);
+      await updatePhoneNumber(user, credential);
+      console.log('se actualizo tu telefono');
+    } catch (err) {
+      const errorMessages = {
+        'auth/too-many-requests':
+          'Max requests reached for today. Try again tomorrow.',
+        'auth/invalid-verification-code':
+          'Invalid verification code. Please enter a valid code.'
+      };
+      // console.log(err);
+      const errorMessage =
+        errorMessages[err.code] || 'An error occurred. Please try again.';
+      throw new Error(errorMessage);
     }
-    console.log('--------------------------------------');
-    console.log(auth);
-    // const appVerifier = new RecaptchaVerifier('recaptcha-container');
-    // console.log(window.recaptchaVerifier);
-
-    const verificationID = await phoneProvider.verifyPhoneNumber(
-      phoneI,
-      window.recaptchaVerifier
-    );
-
-    const verificationCode = prompt('ingrese el codigo');
-
-    const credential = signInWithPhoneNumber(
-      auth,
-      verificationID,
-      verificationCode
-    );
-    console.log(credential);
-
-    await user.updatePhoneNumber(credential);
-
-    setUser(auth.currentUser);
   };
 
   useEffect(() => {
@@ -104,6 +171,8 @@ function AuthProvider({ children }) {
         logout,
         loading,
         loginWithGoogle,
+        loginWithGithub,
+        loginWithFacebook,
         resetPassword,
         updateUserPhone
       }}>

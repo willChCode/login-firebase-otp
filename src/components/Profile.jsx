@@ -10,6 +10,9 @@ function Profile() {
   return (
     <div className='cardCont'>
       <div className='formCont'>
+        <Link to={'/'} className='link text-blue-gray-900'>
+          Home...
+        </Link>
         <h1 className='font-bold text-center text-lg'>Profile Data</h1>
         {!user ? (
           <p>loading</p>

@@ -14,7 +14,8 @@ const initialState = {
 
 function Login() {
   const [inputs, setInputs] = useState(initialState);
-  const { singIn, loginWithGoogle } = useAuth();
+  const { singIn, loginWithGoogle, loginWithGithub, loginWithFacebook } =
+    useAuth();
   const navigate = useNavigate();
 
   const handleChange = ({ target: { name, value } }) => {
@@ -37,6 +38,26 @@ function Login() {
     try {
       await loginWithGoogle();
       toast.success('Login Success with Google');
+      navigate('/');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleGithubLogin = async () => {
+    try {
+      await loginWithGithub();
+      toast.success('Login Success with Github');
+      navigate('/');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      await loginWithFacebook();
+      toast.success('Login Success with Facebook');
       navigate('/');
     } catch (err) {
       console.log(err);
@@ -86,10 +107,14 @@ function Login() {
               className='btn btn-circle btn-ghost'>
               <FcGoogle size={30} />
             </button>
-            <button className='btn btn-circle btn-ghost'>
+            <button
+              onClick={handleFacebookLogin}
+              className='btn btn-circle btn-ghost'>
               <FaFacebookF size={25} color='#3b5998' />
             </button>
-            <button className='btn btn-circle btn-ghost'>
+            <button
+              onClick={handleGithubLogin}
+              className='btn btn-circle btn-ghost'>
               <BsGithub size={30} />
             </button>
           </section>

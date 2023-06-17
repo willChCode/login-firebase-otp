@@ -7,7 +7,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import ResetPassword from './components/resetPassword';
 import Profile from './components/Profile';
 import Phone from './components/Phone';
-import Prueba from './components/Prueba';
 
 function App() {
   return (
@@ -19,7 +18,6 @@ function App() {
         <Route path='/reset-password' element={<ResetPassword />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/phone' element={<Phone />} />
-        <Route path='/prueba' element={<Prueba />} />
       </Routes>
       <ToastContainer />
     </BrowserRouter>

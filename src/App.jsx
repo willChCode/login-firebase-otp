@@ -4,7 +4,7 @@ import Register from './components/Register';
 import Login from './components/Login';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ResetPassword from './components/resetPassword';
+import ResetPassword from './components/ResetPassword';
 import Profile from './components/Profile';
 import Phone from './components/Phone';
 

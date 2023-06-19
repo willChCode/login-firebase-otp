@@ -146,7 +146,9 @@ function AuthProvider({ children }) {
         'auth/too-many-requests':
           'Max requests reached for today. Try again tomorrow.',
         'auth/invalid-verification-code':
-          'Invalid verification code. Please enter a valid code.'
+          'Invalid verification code. Please enter a valid code.',
+        'auth/account-exists-with-different-credential':
+          'A user with the provided phone number already exists.'
       };
       // console.log(err);
       const errorMessage =
